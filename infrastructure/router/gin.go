@@ -15,17 +15,8 @@ import (
 	"github.com/gsabadini/go-bank-transfer/adapter/presenter"
 	"github.com/gsabadini/go-bank-transfer/adapter/repository"
 	"github.com/gsabadini/go-bank-transfer/adapter/validator"
-	"github.com/gsabadini/go-bank-transfer/domain"
 	"github.com/gsabadini/go-bank-transfer/usecase"
-	"github.com/rs/xid"
 )
-
-// TODO : this is a dummyd ata of recipes
-var recipes []domain.Recipe
-
-func init() {
-	recipes = make([]domain.Recipe, 0)
-}
 
 type ginEngine struct {
 	router     *gin.Engine
@@ -100,6 +91,7 @@ func (g ginEngine) setAppHandlers(router *gin.Engine) {
 	router.GET("/v1/accounts", g.buildFindAllAccountAction())
 
 	router.POST("/v1/recipes", g.NewRecipeHandler)
+	router.GET("/v1/recipes", g.ListRecipesHandler)
 
 	router.GET("/v1/health", g.healthcheck())
 }
@@ -134,72 +126,6 @@ func (g ginEngine) buildFindAllTransferAction() gin.HandlerFunc {
 
 		act.Execute(c.Writer, c.Request)
 	}
-}
-
-func (g ginEngine) buildCreateAccountAction() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var (
-			uc = usecase.NewCreateAccountInteractor(
-				repository.NewAccountNoSQL(g.db),
-				presenter.NewCreateAccountPresenter(),
-				g.ctxTimeout,
-			)
-			act = action.NewCreateAccountAction(uc, g.log, g.validator)
-		)
-
-		act.Execute(c.Writer, c.Request)
-	}
-}
-
-func (g ginEngine) buildFindAllAccountAction() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var (
-			uc = usecase.NewFindAllAccountInteractor(
-				repository.NewAccountNoSQL(g.db),
-				presenter.NewFindAllAccountPresenter(),
-				g.ctxTimeout,
-			)
-			act = action.NewFindAllAccountAction(uc, g.log)
-		)
-
-		act.Execute(c.Writer, c.Request)
-	}
-}
-
-func (g ginEngine) buildFindBalanceAccountAction() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var (
-			uc = usecase.NewFindBalanceAccountInteractor(
-				repository.NewAccountNoSQL(g.db),
-				presenter.NewFindAccountBalancePresenter(),
-				g.ctxTimeout,
-			)
-			act = action.NewFindAccountBalanceAction(uc, g.log)
-		)
-
-		q := c.Request.URL.Query()
-		q.Add("account_id", c.Param("account_id"))
-		c.Request.URL.RawQuery = q.Encode()
-
-		act.Execute(c.Writer, c.Request)
-	}
-}
-
-func (g ginEngine) NewRecipeHandler(c *gin.Context) {
-	var recipe domain.Recipe
-
-	// marshal json into struct
-	if err := c.ShouldBindJSON(&recipe); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	recipe.ID = xid.New().String()
-	recipe.PublishedAt = time.Now()
-	recipes = append(recipes, recipe)
-	c.JSON(http.StatusOK, recipe)
 }
 
 func (g ginEngine) healthcheck() gin.HandlerFunc {
