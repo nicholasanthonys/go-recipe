@@ -1,10 +1,11 @@
 package presenter
 
 import (
-	"github.com/gsabadini/go-bank-transfer/domain"
-	"github.com/gsabadini/go-bank-transfer/usecase"
 	"reflect"
 	"testing"
+
+	"github.com/nicholasanthonys/go-recipe/domain"
+	"github.com/nicholasanthonys/go-recipe/usecase"
 )
 
 func TestNewFindAccountBalancePresenter(t *testing.T) {

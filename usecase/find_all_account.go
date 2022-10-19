@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/gsabadini/go-bank-transfer/domain"
+	"github.com/nicholasanthonys/go-recipe/domain"
 )
 
 type (

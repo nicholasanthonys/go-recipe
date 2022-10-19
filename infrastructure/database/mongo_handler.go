@@ -3,8 +3,9 @@ package database
 import (
 	"context"
 	"fmt"
-	"github.com/gsabadini/go-bank-transfer/adapter/repository"
 	"log"
+
+	"github.com/nicholasanthonys/go-recipe/adapter/repository"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

@@ -1,7 +1,7 @@
 package log
 
 import (
-	"github.com/gsabadini/go-bank-transfer/adapter/logger"
+	"github.com/nicholasanthonys/go-recipe/adapter/logger"
 	"go.uber.org/zap"
 )
 

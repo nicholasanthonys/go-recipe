@@ -4,11 +4,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/gsabadini/go-bank-transfer/infrastructure"
-	"github.com/gsabadini/go-bank-transfer/infrastructure/log"
-	"github.com/gsabadini/go-bank-transfer/infrastructure/router"
-	"github.com/gsabadini/go-bank-transfer/infrastructure/validation"
 	"github.com/joho/godotenv"
+	"github.com/nicholasanthonys/go-recipe/infrastructure"
+	"github.com/nicholasanthonys/go-recipe/infrastructure/log"
+	"github.com/nicholasanthonys/go-recipe/infrastructure/router"
+	"github.com/nicholasanthonys/go-recipe/infrastructure/validation"
 )
 
 func main() {

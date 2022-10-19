@@ -87,11 +87,11 @@ run: ## Run golang project
 
 .PHONY: docker-clean
 docker-clean: ## Clean docker removes image
-	docker rmi gsabadini/$(SYSTEM):$(SYSTEM_VERSION)
+	docker rmi nicholasanthonys/$(SYSTEM):$(SYSTEM_VERSION)
 
 .PHONY: docker-build
 docker-build: ## Build docker image for the project
-	@docker build --target production -t gsabadini/$(SYSTEM):$(SYSTEM_VERSION) .
+	@docker build --target production -t nicholasanthonys/$(SYSTEM):$(SYSTEM_VERSION) .
 
 .PHONY: docker-run
 docker-run: docker-deps ## Run docker container for image project
@@ -102,7 +102,7 @@ docker-run: docker-deps ## Run docker container for image project
 	-p 3001:3001 \
 	--env-file .env \
 	--network go-bank-transfer_bank  \
-	--name $(SYSTEM)-$(SYSTEM_VERSION) gsabadini/$(SYSTEM):$(SYSTEM_VERSION)
+	--name $(SYSTEM)-$(SYSTEM_VERSION) nicholasanthonys/$(SYSTEM):$(SYSTEM_VERSION)
 
 docker-deps:
 	docker-compose up -d postgres mongodb-primary mongodb-secondary mongodb-arbiter

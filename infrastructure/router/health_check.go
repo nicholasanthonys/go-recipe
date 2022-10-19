@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/gsabadini/go-bank-transfer/adapter/api/action"
+	"github.com/nicholasanthonys/go-recipe/adapter/api/action"
 )
 
 func (g ginEngine) healthcheck() gin.HandlerFunc {

@@ -1,6 +1,6 @@
 package log
 
-import "github.com/gsabadini/go-bank-transfer/adapter/logger"
+import "github.com/nicholasanthonys/go-recipe/adapter/logger"
 
 type LoggerMock struct{}
 

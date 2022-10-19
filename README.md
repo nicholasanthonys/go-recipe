@@ -1,20 +1,20 @@
 <h1 align="center">Welcome to Go Bank Transfer :bank:</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.10.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://goreportcard.com/badge/github.com/GSabadini/go-bank-transfer" target="_blank">
-    <img alt="Build" src="https://goreportcard.com/badge/github.com/GSabadini/go-bank-transfer" />
+  <a href="https://goreportcard.com/badge/github.com/nicholasanthonys/go-recipe" target="_blank">
+    <img alt="Build" src="https://goreportcard.com/badge/github.com/nicholasanthonys/go-recipe" />
   </a>
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
-  <a href="https://travis-ci.org/github/GSabadini/go-bank-transfer" target="_blank">
-    <img alt="Build" src="https://travis-ci.org/GSabadini/go-bank-transfer.svg?branch=master" />
+  <a href="https://travis-ci.org/github/nicholasanthonys/go-recipe" target="_blank">
+    <img alt="Build" src="https://travis-ci.org/nicholasanthonys/go-recipe.svg?branch=master" />
   </a>
-  <a href="https://github.com/GSabadini/go-bank-transfer/actions" target="_blank">
-    <img src="https://github.com/GSabadini/go-bank-transfer/workflows/test/badge.svg" />
+  <a href="https://github.com/nicholasanthonys/go-recipe/actions" target="_blank">
+    <img src="https://github.com/nicholasanthonys/go-recipe/workflows/test/badge.svg" />
   </a>
-  <a href="https://codecov.io/gh/GSabadini/go-bank-transfer">
-    <img src="https://codecov.io/gh/GSabadini/go-bank-transfer/branch/master/graph/badge.svg" />
+  <a href="https://codecov.io/gh/nicholasanthonys/go-recipe">
+    <img src="https://codecov.io/gh/nicholasanthonys/go-recipe/branch/master/graph/badge.svg" />
   </a>
 </p>
 
@@ -195,8 +195,8 @@ curl -i --request GET 'http://localhost:3001/v1/transfers'
 - Development
 
 ## Author
-- Gabriel Sabadini Facina - [GSabadini](https://github.com/GSabadini)
+- Nicholas Anthony S- [nicholasanthonys](https://github.com/nicholasanthonys)
 
 ## License
-Copyright © 2020 [GSabadini](https://github.com/GSabadini).
+Copyright © 2020 [nicholasanthonys](https://github.com/nicholasanthonys).
 This project is [MIT](LICENSE) licensed.

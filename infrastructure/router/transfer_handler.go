@@ -2,10 +2,10 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/gsabadini/go-bank-transfer/adapter/api/action"
-	"github.com/gsabadini/go-bank-transfer/adapter/presenter"
-	"github.com/gsabadini/go-bank-transfer/adapter/repository"
-	"github.com/gsabadini/go-bank-transfer/usecase"
+	"github.com/nicholasanthonys/go-recipe/adapter/api/action"
+	"github.com/nicholasanthonys/go-recipe/adapter/presenter"
+	"github.com/nicholasanthonys/go-recipe/adapter/repository"
+	"github.com/nicholasanthonys/go-recipe/usecase"
 )
 
 func (g ginEngine) buildCreateTransferAction() gin.HandlerFunc {

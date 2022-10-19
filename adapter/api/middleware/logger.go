@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gsabadini/go-bank-transfer/adapter/api/logging"
-	"github.com/gsabadini/go-bank-transfer/adapter/logger"
+	"github.com/nicholasanthonys/go-recipe/adapter/api/logging"
+	"github.com/nicholasanthonys/go-recipe/adapter/logger"
 
 	"github.com/pkg/errors"
 	"github.com/urfave/negroni"

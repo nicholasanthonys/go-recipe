@@ -1,8 +1,8 @@
 package presenter
 
 import (
-	"github.com/gsabadini/go-bank-transfer/domain"
-	"github.com/gsabadini/go-bank-transfer/usecase"
+	"github.com/nicholasanthonys/go-recipe/domain"
+	"github.com/nicholasanthonys/go-recipe/usecase"
 )
 
 type findAccountBalancePresenter struct{}

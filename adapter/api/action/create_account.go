@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/gsabadini/go-bank-transfer/adapter/api/logging"
-	"github.com/gsabadini/go-bank-transfer/adapter/api/response"
-	"github.com/gsabadini/go-bank-transfer/adapter/logger"
-	"github.com/gsabadini/go-bank-transfer/adapter/validator"
-	"github.com/gsabadini/go-bank-transfer/usecase"
+	"github.com/nicholasanthonys/go-recipe/adapter/api/logging"
+	"github.com/nicholasanthonys/go-recipe/adapter/api/response"
+	"github.com/nicholasanthonys/go-recipe/adapter/logger"
+	"github.com/nicholasanthonys/go-recipe/adapter/validator"
+	"github.com/nicholasanthonys/go-recipe/usecase"
 )
 
 type CreateAccountAction struct {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/gsabadini/go-bank-transfer/domain"
+	"github.com/nicholasanthonys/go-recipe/domain"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

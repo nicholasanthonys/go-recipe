@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gsabadini/go-bank-transfer/adapter/logger"
-	"github.com/gsabadini/go-bank-transfer/adapter/repository"
-	"github.com/gsabadini/go-bank-transfer/adapter/validator"
+	"github.com/nicholasanthonys/go-recipe/adapter/logger"
+	"github.com/nicholasanthonys/go-recipe/adapter/repository"
+	"github.com/nicholasanthonys/go-recipe/adapter/validator"
 )
 
 type ginEngine struct {

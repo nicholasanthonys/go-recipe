@@ -1,11 +1,12 @@
 package presenter
 
 import (
-	"github.com/gsabadini/go-bank-transfer/domain"
-	"github.com/gsabadini/go-bank-transfer/usecase"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/nicholasanthonys/go-recipe/domain"
+	"github.com/nicholasanthonys/go-recipe/usecase"
 )
 
 func Test_findAllTransferPresenter_Output(t *testing.T) {

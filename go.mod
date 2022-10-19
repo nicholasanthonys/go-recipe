@@ -1,4 +1,4 @@
-module github.com/gsabadini/go-bank-transfer
+module github.com/nicholasanthonys/go-recipe
 
 go 1.16
 

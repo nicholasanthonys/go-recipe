@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gsabadini/go-bank-transfer/domain"
+	"github.com/nicholasanthonys/go-recipe/domain"
 	"github.com/rs/xid"
 )
 
