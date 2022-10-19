@@ -198,6 +198,8 @@ func (g ginEngine) NewRecipeHandler(c *gin.Context) {
 
 	recipe.ID = xid.New().String()
 	recipe.PublishedAt = time.Now()
+	recipes = append(recipes, recipe)
+	c.JSON(http.StatusOK, recipe)
 }
 
 func (g ginEngine) healthcheck() gin.HandlerFunc {
