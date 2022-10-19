@@ -15,8 +15,17 @@ import (
 	"github.com/gsabadini/go-bank-transfer/adapter/presenter"
 	"github.com/gsabadini/go-bank-transfer/adapter/repository"
 	"github.com/gsabadini/go-bank-transfer/adapter/validator"
+	"github.com/gsabadini/go-bank-transfer/domain"
 	"github.com/gsabadini/go-bank-transfer/usecase"
+	"github.com/rs/xid"
 )
+
+// TODO : this is a dummyd ata of recipes
+var recipes []domain.Recipe
+
+func init() {
+	recipes = make([]domain.Recipe, 0)
+}
 
 type ginEngine struct {
 	router     *gin.Engine
@@ -89,6 +98,8 @@ func (g ginEngine) setAppHandlers(router *gin.Engine) {
 	router.GET("/v1/accounts/:account_id/balance", g.buildFindBalanceAccountAction())
 	router.POST("/v1/accounts", g.buildCreateAccountAction())
 	router.GET("/v1/accounts", g.buildFindAllAccountAction())
+
+	router.POST("/v1/recipes", g.NewRecipeHandler)
 
 	router.GET("/v1/health", g.healthcheck())
 }
@@ -172,6 +183,21 @@ func (g ginEngine) buildFindBalanceAccountAction() gin.HandlerFunc {
 
 		act.Execute(c.Writer, c.Request)
 	}
+}
+
+func (g ginEngine) NewRecipeHandler(c *gin.Context) {
+	var recipe domain.Recipe
+
+	// marshal json into struct
+	if err := c.ShouldBindJSON(&recipe); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	recipe.ID = xid.New().String()
+	recipe.PublishedAt = time.Now()
 }
 
 func (g ginEngine) healthcheck() gin.HandlerFunc {
