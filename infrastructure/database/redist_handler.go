@@ -15,7 +15,7 @@ type redistHandler struct {
 }
 
 func NewRedistHanlder(c *config) (*redistHandler, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), c.ctxTimeout)
+	_, cancel := context.WithTimeout(context.Background(), c.ctxTimeout)
 	defer cancel()
 
 	db, err := strconv.Atoi(c.database)
@@ -27,10 +27,12 @@ func NewRedistHanlder(c *config) (*redistHandler, error) {
 		Password: c.password, // no password set
 		DB:       db,         // use default DB
 	})
-	stat := rdb.Ping(ctx)
-	if stat.Err() != nil {
-		log.Fatal(err)
-	}
+	// pong, err := rdb.Ping(ctx).Result()
+	// fmt.Println(pong, err)
+	// if err != nil {
+	// 	fmt.Println("error ping : ", err.Error())
+	// 	log.Fatal(err)
+	// }
 
 	fmt.Println("Successfully connected to redis")
 
@@ -48,4 +50,8 @@ func (rh redistHandler) Set(ctx context.Context, key string, value string, time 
 
 func (rh redistHandler) Get(ctx context.Context, key string) (string, error) {
 	return rh.client.Get(ctx, key).Result()
+}
+
+func (rh redistHandler) Del(ctx context.Context, key []string) (int64, error) {
+	return rh.client.Del(ctx, key...).Result()
 }

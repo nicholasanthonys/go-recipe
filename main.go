@@ -22,7 +22,7 @@ func main() {
 		Validator(validation.InstanceGoPlayground).
 		DbNoSQL(database.InstanceMongoDB).
 		DbKVStore(database.InstanceRedis)
-		// DbSQL(database.InstancePostgres).
+	// DbSQL(database.Ins.tancePostgres).
 
 	app.WebServerPort(os.Getenv("APP_PORT")).
 		WebServer(router.InstanceGin).

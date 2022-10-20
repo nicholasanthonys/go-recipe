@@ -14,7 +14,7 @@ const (
 	InstanceRedis int = iota
 )
 
-func NewDatabaseKeyValStoreFactory(instance int) (repository.KeyValStore, error) {
+func NewDatabaseKeyValStoreFactory(instance int) (repository.KeyValStoreIn, error) {
 	switch instance {
 	case InstanceRedis:
 		return NewRedistHanlder(newConfigRedis())
