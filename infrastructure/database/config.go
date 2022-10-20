@@ -36,3 +36,11 @@ func newConfigPostgres() *config {
 		password: os.Getenv("POSTGRES_PASSWORD"),
 	}
 }
+
+func newConfigRedis() *config {
+	return &config{
+		host:     os.Getenv("REDIST_HOST"),
+		password: os.Getenv("REDIST_PASSWORD"),
+		database: os.Getenv("REDIST_DB"),
+	}
+}

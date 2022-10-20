@@ -21,9 +21,10 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - /go-recipe/mongo-volume:/data/db
     networks:
       - recipe-net
-      
 
   mongo-express:
     image: mongo-express
@@ -37,6 +38,18 @@ services:
     networks:
       - recipe-net
 
+  redis:
+    image: redis:7.0.5-bullseye
+    volumes:
+      - /go-recipe/redis-volume:/db
+    networks:
+      - recipe-net
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - 8001:8001
+    networks:
+      - recipe-net
 
 networks:
   recipe-net:
