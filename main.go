@@ -6,6 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/nicholasanthonys/go-recipe/infrastructure"
+	"github.com/nicholasanthonys/go-recipe/infrastructure/database"
 	"github.com/nicholasanthonys/go-recipe/infrastructure/log"
 	"github.com/nicholasanthonys/go-recipe/infrastructure/router"
 	"github.com/nicholasanthonys/go-recipe/infrastructure/validation"
@@ -18,9 +19,9 @@ func main() {
 		Name(os.Getenv("APP_NAME")).
 		ContextTimeout(10 * time.Second).
 		Logger(log.InstanceZapLogger).
-		Validator(validation.InstanceGoPlayground)
+		Validator(validation.InstanceGoPlayground).
+		DbNoSQL(database.InstanceMongoDB)
 		// DbSQL(database.InstancePostgres).
-		// DbNoSQL(database.InstanceMongoDB)
 
 	app.WebServerPort(os.Getenv("APP_PORT")).
 		WebServer(router.InstanceGin).

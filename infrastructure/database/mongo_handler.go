@@ -21,10 +21,10 @@ func NewMongoHandler(c *config) (*mongoHandler, error) {
 	defer cancel()
 
 	uri := fmt.Sprintf(
-		"%s://%s:%s@mongodb-primary,mongodb-secondary,mongodb-arbiter/?replicaSet=replicaset",
-		c.host,
+		"mongodb://%s:%s@%s/?authSource=admin",
 		c.user,
 		c.password,
+		c.host,
 	)
 
 	clientOpts := options.Client().ApplyURI(uri)
@@ -38,6 +38,7 @@ func NewMongoHandler(c *config) (*mongoHandler, error) {
 		log.Fatal(err)
 	}
 
+	fmt.Println("Successfully connected to mongodb")
 	return &mongoHandler{
 		db:     client.Database(c.database),
 		client: client,
@@ -96,6 +97,12 @@ func (mgo mongoHandler) FindOne(
 	}
 
 	return nil
+}
+
+func (mgo *mongoHandler) Delete(ctx context.Context,
+	collection string, query interface{}) error {
+	_, err := mgo.db.Collection(collection).DeleteOne(ctx, query)
+	return err
 }
 
 func (mgo *mongoHandler) StartSession() (repository.Session, error) {

@@ -3,11 +3,13 @@ package router
 import (
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nicholasanthonys/go-recipe/adapter/api/action"
+	"github.com/nicholasanthonys/go-recipe/adapter/presenter"
+	"github.com/nicholasanthonys/go-recipe/adapter/repository"
 	"github.com/nicholasanthonys/go-recipe/domain"
-	"github.com/rs/xid"
+	"github.com/nicholasanthonys/go-recipe/usecase"
 )
 
 // TODO : this is a dummy data of recipes
@@ -18,20 +20,27 @@ func init() {
 }
 
 func (g ginEngine) NewRecipeHandler(c *gin.Context) {
-	var recipe domain.Recipe
+	var uc = usecase.NewCreateRecipeInteractor(
+		repository.NewRecipeNoSQL(g.db),
+		presenter.NewCreateRecipePResenter(),
+		g.ctxTimeout,
+	)
+	act := action.NewCreateRecipeAction(uc, g.log, g.validator)
+	act.Execute(c.Writer, c.Request)
+	// var recipe domain.Recipe
 
-	// marshal json into struct
-	if err := c.ShouldBindJSON(&recipe); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+	// // marshal json into struct
+	// if err := c.ShouldBindJSON(&recipe); err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{
+	// 		"error": err.Error(),
+	// 	})
+	// 	return
+	// }
 
-	recipe.ID = xid.New().String()
-	recipe.PublishedAt = time.Now()
-	recipes = append(recipes, recipe)
-	c.JSON(http.StatusOK, recipe)
+	// recipe.ID = domain.RecipeID(xid.New().String())
+	// recipe.PublishedAt = time.Now()
+	// recipes = append(recipes, recipe)
+	// c.JSON(http.StatusOK, recipe)
 }
 
 func (g ginEngine) ListRecipesHandler(c *gin.Context) {
@@ -51,7 +60,7 @@ func (g ginEngine) UpdateRecipeHandler(c *gin.Context) {
 
 	index := -1
 	for i := 0; i < len(recipes); i++ {
-		if recipes[i].ID == id {
+		if recipes[i].ID.String() == id {
 			index = i
 			break
 		}
@@ -64,7 +73,7 @@ func (g ginEngine) UpdateRecipeHandler(c *gin.Context) {
 		return
 	}
 
-	recipe.ID = id
+	recipe.ID = domain.RecipeID(id)
 	recipes[index] = recipe
 
 	c.JSON(http.StatusOK, recipe)
@@ -83,7 +92,7 @@ func (g ginEngine) DeleteRecipeHandler(c *gin.Context) {
 
 	index := -1
 	for i := 0; i < len(recipes); i++ {
-		if recipes[i].ID == id {
+		if recipes[i].ID.String() == id {
 			index = i
 			break
 		}
