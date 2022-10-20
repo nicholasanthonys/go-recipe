@@ -89,6 +89,8 @@ func (g ginEngine) setAppHandlers(router *gin.Engine) {
 
 	router.POST("/v1/recipes", g.NewRecipeHandler)
 	router.GET("/v1/recipes", g.ListRecipesHandler)
+	router.GET("/v1/recipes/:id", g.FindRecipeHandler)
+
 	router.PUT("/v1/recipes/:id", g.UpdateRecipeHandler)
 	router.DELETE("/v1/recipes/:id", g.DeleteRecipeHandler)
 	router.GET("/v1/recipes/search", g.SearchRecipeHandler)

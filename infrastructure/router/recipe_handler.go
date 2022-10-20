@@ -19,6 +19,18 @@ func init() {
 	recipes = make([]domain.Recipe, 0)
 }
 
+func (g ginEngine) FindRecipeHandler(c *gin.Context) {
+	uc := usecase.NewFindRecipeInteractor(
+		repository.NewRecipeNoSQL(g.db),
+		presenter.NewFindRecipePresenter(),
+		g.ctxTimeout,
+	)
+
+	ac := action.NewFindRecipeAction(uc, g.log)
+	ac.Execute(c.Writer, c.Request)
+
+}
+
 func (g ginEngine) NewRecipeHandler(c *gin.Context) {
 	var uc = usecase.NewCreateRecipeInteractor(
 		repository.NewRecipeNoSQL(g.db),
