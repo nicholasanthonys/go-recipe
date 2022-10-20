@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   app:
-    container_name: "go-bank-transfer"
+    container_name: "go-recipe"
     build:
       context: .
       dockerfile: Dockerfile
