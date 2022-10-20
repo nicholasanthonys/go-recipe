@@ -19,6 +19,7 @@ type config struct {
 	validator     validator.Validator
 	dbSQL         repository.SQL
 	dbNoSQL       repository.NoSQL
+	dbKVStore     repository.KeyValStore
 	ctxTimeout    time.Duration
 	webServerPort router.Port
 	webServer     router.Server
@@ -70,6 +71,18 @@ func (c *config) DbNoSQL(instance int) *config {
 	c.logger.Infof("Successfully connected to the NoSQL database")
 
 	c.dbNoSQL = db
+	return c
+}
+
+func (c *config) DbKVStore(instance int) *config {
+	db, err := database.NewDatabaseKeyValStoreFactory(instance)
+	if err != nil {
+		c.logger.Fatalln(err, "Could not make a connection to the kv database")
+	}
+
+	c.logger.Infof("Successfully connected to the kv database")
+
+	c.dbKVStore = db
 	return c
 }
 

@@ -20,7 +20,8 @@ func main() {
 		ContextTimeout(10 * time.Second).
 		Logger(log.InstanceZapLogger).
 		Validator(validation.InstanceGoPlayground).
-		DbNoSQL(database.InstanceMongoDB)
+		DbNoSQL(database.InstanceMongoDB).
+		DbKVStore(database.InstanceRedis)
 		// DbSQL(database.InstancePostgres).
 
 	app.WebServerPort(os.Getenv("APP_PORT")).
