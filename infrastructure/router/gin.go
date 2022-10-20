@@ -19,6 +19,7 @@ type ginEngine struct {
 	router     *gin.Engine
 	log        logger.Logger
 	db         repository.NoSQL
+	kv         repository.KeyValStoreIn
 	validator  validator.Validator
 	port       Port
 	ctxTimeout time.Duration
@@ -27,6 +28,7 @@ type ginEngine struct {
 func newGinServer(
 	log logger.Logger,
 	db repository.NoSQL,
+	kv repository.KeyValStoreIn,
 	validator validator.Validator,
 	port Port,
 	t time.Duration,
@@ -35,6 +37,7 @@ func newGinServer(
 		router:     gin.New(),
 		log:        log,
 		db:         db,
+		kv:         kv,
 		validator:  validator,
 		port:       port,
 		ctxTimeout: t,

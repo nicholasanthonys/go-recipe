@@ -45,6 +45,7 @@ func (g ginEngine) ListRecipesHandler(c *gin.Context) {
 	var (
 		uc = usecase.NewFindAllRecipeInteractor(
 			repository.NewRecipeNoSQL(g.db),
+			repository.NewKeyValStore(g.kv),
 			presenter.NewFindAllRecipePresenter(),
 			g.ctxTimeout,
 		)

@@ -30,6 +30,7 @@ func NewWebServerFactory(
 	log logger.Logger,
 	dbSQL repository.SQL,
 	dbNoSQL repository.NoSQL,
+	kv repository.KeyValStoreIn,
 	validator validator.Validator,
 	port Port,
 	ctxTimeout time.Duration,
@@ -38,7 +39,7 @@ func NewWebServerFactory(
 	case InstanceGorillaMux:
 		return newGorillaMux(log, dbSQL, validator, port, ctxTimeout), nil
 	case InstanceGin:
-		return newGinServer(log, dbNoSQL, validator, port, ctxTimeout), nil
+		return newGinServer(log, dbNoSQL, kv, validator, port, ctxTimeout), nil
 	default:
 		return nil, errInvalidWebServerInstance
 	}
