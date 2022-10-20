@@ -27,24 +27,18 @@ func (g ginEngine) NewRecipeHandler(c *gin.Context) {
 	)
 	act := action.NewCreateRecipeAction(uc, g.log, g.validator)
 	act.Execute(c.Writer, c.Request)
-	// var recipe domain.Recipe
-
-	// // marshal json into struct
-	// if err := c.ShouldBindJSON(&recipe); err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{
-	// 		"error": err.Error(),
-	// 	})
-	// 	return
-	// }
-
-	// recipe.ID = domain.RecipeID(xid.New().String())
-	// recipe.PublishedAt = time.Now()
-	// recipes = append(recipes, recipe)
-	// c.JSON(http.StatusOK, recipe)
 }
 
 func (g ginEngine) ListRecipesHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, recipes)
+	var (
+		uc = usecase.NewFindAllRecipeInteractor(
+			repository.NewRecipeNoSQL(g.db),
+			presenter.NewFindAllRecipePresenter(),
+			g.ctxTimeout,
+		)
+		act = action.NewFindAllRecipeAction(uc, g.log)
+	)
+	act.Execute(c.Writer, c.Request)
 }
 
 func (g ginEngine) UpdateRecipeHandler(c *gin.Context) {
