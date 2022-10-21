@@ -27,11 +27,6 @@ type JWTOutput struct {
 	Expires time.Time `json:"expires"`
 }
 
-type User struct {
-	Password string `json:"password"`
-	Username string `json:"username"`
-}
-
 // with X-api-key
 func (g ginEngine) CheckAPIKey(c *gin.Context) {
 	if c.GetHeader("X-API-KEY") != os.Getenv("X_API_KEY") {
@@ -45,7 +40,6 @@ func (g ginEngine) CheckAPIKey(c *gin.Context) {
 
 }
 
-// with jwt
 func (g ginEngine) SignInHandler(c *gin.Context) {
 
 	uc := usecase.NewSignInInteractor(
@@ -56,50 +50,25 @@ func (g ginEngine) SignInHandler(c *gin.Context) {
 
 	ac := action.NewSignInAction(uc, g.log, c)
 	ac.Execute(c.Writer, c.Request)
+}
 
-	var user User
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+func (g ginEngine) RegisterHandler(c *gin.Context) {
+	uc := usecase.NewRegisterInteractor(
+		repository.NewUserNoSQL(g.db),
+		presenter.NewRegisterPresenter(),
+		g.ctxTimeout,
+	)
 
-	if user.Username != "admin" || user.Password != "password" {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "invalid username or password",
-		})
-		return
-	}
+	ac := action.NewRegisterAction(uc, g.log)
+	ac.Execute(c.Writer, c.Request)
+}
 
-	expirationTime := time.Now().Add(10 * time.Minute)
-	claims := Claims{
-		user.Username,
-		jwt.RegisteredClaims{
-			// A usual scenario is to set the expiration time relative to the current time
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
-			Issuer:    user.Username,
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := token.SignedString([]byte(
-		os.Getenv("JWT_SECRET"),
-	))
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	jwtOutput := JWTOutput{
-		Token:   tokenString,
-		Expires: expirationTime,
-	}
-
-	c.JSON(http.StatusOK, jwtOutput)
-
+func (g ginEngine) SignOutHandler(c *gin.Context) {
+	fmt.Println("sign out handler triggered")
+	session := sessions.Default(c)
+	session.Clear()
+	session.Save()
+	c.JSON(http.StatusOK, gin.H{"message": "Signed out..."})
 }
 
 // middleware

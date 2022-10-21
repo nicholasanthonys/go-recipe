@@ -2,13 +2,14 @@ package usecase
 
 import (
 	"context"
-	"crypto/sha256"
 	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/nicholasanthonys/go-recipe/domain"
+	"github.com/pkg/errors"
 	"github.com/rs/xid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type (
@@ -20,8 +21,8 @@ type (
 
 	// SignInInput input data
 	SignInInput struct {
-		Email    string `json:"string" validate:"required"`
-		Password string `json:"string" validate:"required"`
+		Email    string `json:"email" validate:"required"`
+		Password string `json:"password" validate:"required"`
 	}
 
 	// SignInPresenter output port
@@ -60,17 +61,21 @@ func (r signInInteractor) Execute(ctx context.Context, input SignInInput, c *gin
 	ctx, cancel := context.WithTimeout(ctx, r.ctxTimeout)
 	defer cancel()
 
-	h := sha256.New()
-
-	user, err := r.repo.FindByEmailAndPass(ctx, input.Email, string(h.Sum([]byte(input.Password))))
+	user, err := r.repo.FindByEmail(ctx, domain.Email(input.Email))
 	if err != nil {
 		return r.presenter.Output(domain.User{}), err
 	}
 
-	sessionToken := xid.New()
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
+	if err != nil {
+		return r.presenter.Output(domain.User{}), errors.Wrap(err, "login failed")
+	}
+
+	sessionToken := xid.New().String()
 	session := sessions.Default(c)
 	session.Set("username", user.Email)
 	session.Set("token", sessionToken)
+	session.Save()
 
 	return r.presenter.Output(user), nil
 }

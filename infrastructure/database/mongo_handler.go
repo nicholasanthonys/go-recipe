@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/nicholasanthonys/go-recipe/adapter/repository"
+	"gopkg.in/mgo.v2/bson"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -39,10 +40,28 @@ func NewMongoHandler(c *config) (*mongoHandler, error) {
 	}
 
 	fmt.Println("Successfully connected to mongodb")
-	return &mongoHandler{
+	fmt.Println("setting index.... ")
+
+	mgo := &mongoHandler{
 		db:     client.Database(c.database),
 		client: client,
-	}, nil
+	}
+
+	// set unique index
+	mgo.setUniqueIndex(ctx, "users", "email", 1)
+
+	return mgo, nil
+}
+
+func (mgo mongoHandler) setUniqueIndex(ctx context.Context, collection string, k string, v uint32) {
+	mgo.db.Collection(collection).Indexes().CreateOne(
+		ctx,
+		mongo.IndexModel{
+			Keys:    bson.M{"key": k, "value": v},
+			Options: options.Index().SetUnique(true),
+		},
+	)
+
 }
 
 func (mgo mongoHandler) Store(ctx context.Context, collection string, data interface{}) error {

@@ -14,6 +14,7 @@ type UserRepository interface {
 	Create(context.Context, User) (User, error)
 	Update(context.Context, UserID, User) (User, error)
 	FindAll(context.Context) ([]User, error)
+	FindByEmail(context.Context, Email) (User, error)
 	FindByEmailAndPass(context context.Context, email string, password string) (User, error)
 	FindByID(context.Context, UserID) (User, error)
 	Delete(context.Context, UserID) error
@@ -27,8 +28,13 @@ type User struct {
 }
 
 type UserID string
+type Email string
 
 func (r UserID) String() string {
+	return string(r)
+}
+
+func (r Email) String() string {
 	return string(r)
 }
 

@@ -9,6 +9,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/nicholasanthonys/go-recipe/adapter/logger"
 	"github.com/nicholasanthonys/go-recipe/adapter/repository"
@@ -34,7 +36,7 @@ func newGinServer(
 	t time.Duration,
 ) *ginEngine {
 	return &ginEngine{
-		router:     gin.New(),
+		router:     gin.Default(),
 		log:        log,
 		db:         db,
 		kv:         kv,
@@ -83,13 +85,18 @@ func (g ginEngine) Listen() {
 
 /* TODO ADD MIDDLEWARE */
 func (g ginEngine) setAppHandlers(router *gin.Engine) {
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("mysession", store))
+
 	router.POST("/v1/signin", g.SignInHandler)
+	router.POST("/v1/signout", g.SignOutHandler)
+
+	router.POST("/v1/register", g.RegisterHandler)
+
 	router.POST("/v1/refresh", g.RefreshHandler)
 
-
 	// router.Use(g.CheckAPIKey)
-	router.Use(g.AuthMiddleware)
-
+	router.Use(g.AuthMiddlewareWithSession)
 
 	router.POST("/v1/transfers", g.buildCreateTransferAction())
 	router.GET("/v1/transfers", g.buildFindAllTransferAction())

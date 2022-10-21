@@ -5,13 +5,13 @@ import (
 	"github.com/nicholasanthonys/go-recipe/usecase"
 )
 
-type findSignInPresenter struct{}
+type signInPresenter struct{}
 
 func NewSignInPresenter() usecase.SignInPresenter {
-	return findSignInPresenter{}
+	return signInPresenter{}
 }
 
-func (a findSignInPresenter) Output(user domain.User) usecase.SignInOutput {
+func (a signInPresenter) Output(user domain.User) usecase.SignInOutput {
 	o := usecase.SignInOutput{
 		ID:    user.ID.String(),
 		Email: user.Email,

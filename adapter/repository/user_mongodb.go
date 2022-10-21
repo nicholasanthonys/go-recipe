@@ -46,6 +46,31 @@ func (r UserNoSQL) Create(ctx context.Context, user domain.User) (domain.User, e
 
 }
 
+func (a UserNoSQL) FindByEmail(ctx context.Context, email domain.Email) (domain.User, error) {
+	var (
+		userBSON = &userBSON{}
+		query    = bson.M{
+			"email": email.String(),
+		}
+	)
+
+	if err := a.db.FindOne(ctx, a.collectionName, query, nil, userBSON); err != nil {
+		switch err {
+		case mongo.ErrNoDocuments:
+			return domain.User{}, domain.ErrUserNotFound
+		default:
+			return domain.User{}, errors.Wrap(err, "error find user")
+		}
+	}
+
+	return domain.NewUser(
+		domain.UserID(userBSON.ID),
+		userBSON.Email,
+		userBSON.Password,
+		userBSON.CreatedAt,
+	), nil
+}
+
 func (a UserNoSQL) FindByEmailAndPass(ctx context.Context, email string, password string) (domain.User, error) {
 	var (
 		userBSON = &userBSON{}
@@ -58,9 +83,9 @@ func (a UserNoSQL) FindByEmailAndPass(ctx context.Context, email string, passwor
 	if err := a.db.FindOne(ctx, a.collectionName, query, nil, userBSON); err != nil {
 		switch err {
 		case mongo.ErrNoDocuments:
-			return domain.User{}, domain.ErrAccountNotFound
+			return domain.User{}, domain.ErrUserNotFound
 		default:
-			return domain.User{}, errors.Wrap(err, "error fetching account")
+			return domain.User{}, errors.Wrap(err, "error find user")
 		}
 	}
 
