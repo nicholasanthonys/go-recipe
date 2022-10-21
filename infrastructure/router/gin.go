@@ -83,6 +83,14 @@ func (g ginEngine) Listen() {
 
 /* TODO ADD MIDDLEWARE */
 func (g ginEngine) setAppHandlers(router *gin.Engine) {
+	router.POST("/v1/signin", g.SignInHandler)
+	router.POST("/v1/refresh", g.RefreshHandler)
+
+
+	// router.Use(g.CheckAPIKey)
+	router.Use(g.AuthMiddleware)
+
+
 	router.POST("/v1/transfers", g.buildCreateTransferAction())
 	router.GET("/v1/transfers", g.buildFindAllTransferAction())
 
