@@ -85,8 +85,19 @@ func (g ginEngine) Listen() {
 
 /* TODO ADD MIDDLEWARE */
 func (g ginEngine) setAppHandlers(router *gin.Engine) {
+
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
+
+	// auth, err := NewAuthenticator()
+	// if err != nil {
+	// 	g.log.Fatalln("Failed to initialize the authenticator: %v", err)
+	// }
+
+	// router.GET("/auth0/login", Auth0HandlerLogin(auth))
+	// router.GET("/auth0/callback", Auth0HandlerCallback(auth))
+	// router.GET("/auth0/user", Auth0IsAuthenticated, Auth0UserProfileHandler)
+	// router.GET("/auth0/logout", Auth0HandlerLogout)
 
 	router.POST("/v1/signin", g.SignInHandler)
 	router.POST("/v1/signout", g.SignOutHandler)
@@ -96,7 +107,10 @@ func (g ginEngine) setAppHandlers(router *gin.Engine) {
 	router.POST("/v1/refresh", g.RefreshHandler)
 
 	// router.Use(g.CheckAPIKey)
-	router.Use(g.AuthMiddlewareWithSession)
+	// router.Use(g.AuthMiddlewareWithSession)
+
+	// auth 0 middleware
+	router.Use(Auth0Middleware)
 
 	router.POST("/v1/transfers", g.buildCreateTransferAction())
 	router.GET("/v1/transfers", g.buildFindAllTransferAction())
