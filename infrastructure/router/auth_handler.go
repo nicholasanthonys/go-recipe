@@ -6,8 +6,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/nicholasanthonys/go-recipe/adapter/api/action"
+	"github.com/nicholasanthonys/go-recipe/adapter/presenter"
+	"github.com/nicholasanthonys/go-recipe/adapter/repository"
+	"github.com/nicholasanthonys/go-recipe/usecase"
 )
 
 type AuthHandler struct{}
@@ -29,8 +34,6 @@ type User struct {
 
 // with X-api-key
 func (g ginEngine) CheckAPIKey(c *gin.Context) {
-	fmt.Println("env api key : ", os.Getenv("X_API_KEY"))
-	fmt.Print("header api key : ", c.GetHeader("X-API-KEY"))
 	if c.GetHeader("X-API-KEY") != os.Getenv("X_API_KEY") {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "API key invalid",
@@ -44,6 +47,16 @@ func (g ginEngine) CheckAPIKey(c *gin.Context) {
 
 // with jwt
 func (g ginEngine) SignInHandler(c *gin.Context) {
+
+	uc := usecase.NewSignInInteractor(
+		repository.NewUserNoSQL(g.db),
+		presenter.NewSignInPresenter(),
+		g.ctxTimeout,
+	)
+
+	ac := action.NewSignInAction(uc, g.log, c)
+	ac.Execute(c.Writer, c.Request)
+
 	var user User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -109,6 +122,19 @@ func (g ginEngine) AuthMiddleware(c *gin.Context) {
 
 	c.Next()
 
+}
+
+func (g ginEngine) AuthMiddlewareWithSession(c *gin.Context) {
+
+	session := sessions.Default(c)
+	sessionToken := session.Get("token")
+	if sessionToken == nil {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": "Not Logged in",
+		})
+		c.Abort()
+	}
+	c.Next()
 }
 
 func (g ginEngine) RefreshHandler(c *gin.Context) {
