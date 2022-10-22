@@ -25,6 +25,10 @@ type ginEngine struct {
 	validator  validator.Validator
 	port       Port
 	ctxTimeout time.Duration
+	isTls      bool
+	address    string
+	certFile   string
+	keyFile    string
 }
 
 func newGinServer(
@@ -34,6 +38,10 @@ func newGinServer(
 	validator validator.Validator,
 	port Port,
 	t time.Duration,
+	isTls bool,
+	address string,
+	certFile string,
+	keyFile string,
 ) *ginEngine {
 	return &ginEngine{
 		router:     gin.Default(),
@@ -43,6 +51,10 @@ func newGinServer(
 		validator:  validator,
 		port:       port,
 		ctxTimeout: t,
+		address:    address,
+		certFile:   certFile,
+		keyFile:    keyFile,
+		isTls:      isTls,
 	}
 }
 
@@ -63,10 +75,20 @@ func (g ginEngine) Listen() {
 	signal.Notify(stop, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		g.log.WithFields(logger.Fields{"port": g.port}).Infof("Starting HTTP Server")
-		if err := server.ListenAndServe(); err != nil {
-			g.log.WithError(err).Fatalln("Error starting HTTP server")
+		if !g.isTls {
+			g.log.WithFields(logger.Fields{"port": g.port}).Infof("Starting HTTP Server")
+			if err := server.ListenAndServe(); err != nil {
+				g.log.WithError(err).Fatalln("Error starting HTTP server")
+			}
+		} else {
+			g.log.WithFields(logger.Fields{"port": g.address}).Infof("Starting HTTPS Server")
+			if g.isTls {
+				if err := g.router.RunTLS(g.address, g.certFile, g.keyFile); err != nil {
+					g.log.WithError(err).Fatalln("Error starting HTTPS server")
+				}
+			}
 		}
+
 	}()
 
 	<-stop
@@ -110,7 +132,7 @@ func (g ginEngine) setAppHandlers(router *gin.Engine) {
 	// router.Use(g.AuthMiddlewareWithSession)
 
 	// auth 0 middleware
-	router.Use(Auth0Middleware)
+	// router.Use(Auth0Middleware)
 
 	router.POST("/v1/transfers", g.buildCreateTransferAction())
 	router.GET("/v1/transfers", g.buildFindAllTransferAction())
