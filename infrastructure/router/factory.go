@@ -2,6 +2,7 @@ package router
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	"github.com/nicholasanthonys/go-recipe/adapter/repository"
@@ -39,7 +40,18 @@ func NewWebServerFactory(
 	case InstanceGorillaMux:
 		return newGorillaMux(log, dbSQL, validator, port, ctxTimeout), nil
 	case InstanceGin:
-		return newGinServer(log, dbNoSQL, kv, validator, port, ctxTimeout), nil
+		return newGinServer(
+			log,
+			dbNoSQL,
+			kv,
+			validator,
+			port,
+			ctxTimeout,
+			true,
+			os.Getenv("TLS_PORT"),
+			os.Getenv("SELF_SIGNED_CERT_PATH"),
+			os.Getenv("PRIVATE_KEY_PATH"),
+		), nil
 	default:
 		return nil, errInvalidWebServerInstance
 	}
