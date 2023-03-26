@@ -34,7 +34,7 @@ func (g ginEngine) FindRecipeHandler(c *gin.Context) {
 func (g ginEngine) NewRecipeHandler(c *gin.Context) {
 	var uc = usecase.NewCreateRecipeInteractor(
 		repository.NewRecipeNoSQL(g.db),
-		presenter.NewCreateRecipePResenter(),
+		presenter.NewCreateRecipePresenter(),
 		g.ctxTimeout,
 	)
 	act := action.NewCreateRecipeAction(uc, g.log, g.validator)
