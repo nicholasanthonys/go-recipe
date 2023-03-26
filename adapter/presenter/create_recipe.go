@@ -7,7 +7,7 @@ import (
 
 type createRecipePresenter struct{}
 
-func NewCreateRecipePResenter() usecase.CreateRecipePresenter {
+func NewCreateRecipePresenter() usecase.CreateRecipePresenter {
 	return createRecipePresenter{}
 }
 
